@@ -1,0 +1,13 @@
+﻿<Window x:Class="MyJournalTracker.Form.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings" Height="300" Width="401">
+    <Grid>
+    	<Button Content="OK" Margin="195,225.04,115,16" Click="OkButtonClick"/>
+        <Button Content="Cancel" Margin="289.5,225.04,20.5,16" Click="CancelButtonClick"/>
+    	<Label Content="Dropbox Folder" HorizontalAlignment="Left" Margin="10,19.666,0,0" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Height="19.041" Margin="10,50.626,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="280"/>
+    	<Button Content="Folder" Margin="289.5,50.626,20,190.414"/>
+        
+    </Grid>
+</Window>

@@ -1,0 +1,19 @@
+﻿<!--
+      *********    DIESE DATEI DARF NICHT GEÄNDERT WERDEN     *********
+      Diese Datei wurde von einem Designwerkzeug erstellt. Änderungen
+      dieser Datei können Fehler verursachen.
+-->
+<sampleData:SampleDataSource xmlns:sampleData="clr-namespace:Expression.Blend.SampleData.SampleDataSource">
+	<sampleData:SampleDataSource.Collection>
+		<sampleData:Item Property1="Maecenas aliquam praesent" Property2="True"/>
+		<sampleData:Item Property1="Integer nam sed" Property2="False"/>
+		<sampleData:Item Property1="Class aenean" Property2="True"/>
+		<sampleData:Item Property1="Mauris cras accumsan dis" Property2="False"/>
+		<sampleData:Item Property1="Duis quisque curae donec" Property2="True"/>
+		<sampleData:Item Property1="Vivamus aliquam" Property2="False"/>
+		<sampleData:Item Property1="Est etiam bibendum" Property2="True"/>
+		<sampleData:Item Property1="Nunc hac nullam" Property2="False"/>
+		<sampleData:Item Property1="Fusce leo dictumst" Property2="True"/>
+		<sampleData:Item Property1="Amet eleifend mus" Property2="False"/>
+	</sampleData:SampleDataSource.Collection>
+</sampleData:SampleDataSource>

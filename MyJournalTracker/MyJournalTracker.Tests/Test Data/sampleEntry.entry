@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Creation Date</key>
+	<date>2013-09-28T08:34:49Z</date>
+	<key>Creator</key>
+	<dict>
+		<key>Device Agent</key>
+		<string>Macintosh/iMac13,1</string>
+		<key>Generation Date</key>
+		<date>2013-09-28T08:34:49Z</date>
+		<key>Host Name</key>
+		<string>Andre Claaßens iMac (4)</string>
+		<key>OS Agent</key>
+		<string>Mac OS X/10.8.5</string>
+	</dict>
+	<key>Entry Text</key>
+	<string>Testeintrag fürs Code mit Photo</string>
+	<key>Starred</key>
+	<false/>
+	<key>Tags</key>
+	<array>
+		<string>Coding</string>
+	</array>
+	<key>Time Zone</key>
+	<string>Europe/Berlin</string>
+	<key>UUID</key>
+	<string>502491ACBE2445CF8AB14271EF65FC33</string>
+</dict>
+</plist>
