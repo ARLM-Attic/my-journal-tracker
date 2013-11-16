@@ -16,7 +16,6 @@ namespace MyJournalTracker
 
     using Microsoft.Win32;
 
-    using MyJournalTracker.Form;
     using MyJournalTracker.Logic;
     using MyJournalTracker.Model;
     using MyJournalTracker.Utility;
@@ -102,7 +101,9 @@ namespace MyJournalTracker
         /// </summary>
         private void ExecuteSnipping()
         {
+            this.Hide();
             var image = SnippingTool.SnippingTool.Snip();
+            this.Show();
             if (image == null)
             {
                 return;
@@ -162,26 +163,9 @@ namespace MyJournalTracker
         /// <param name="e">
         /// The e.
         /// </param>
-        /// <exception cref="NotImplementedException">
-        /// </exception>
         private void SaveEntry(object sender, ExecutedRoutedEventArgs e)
         {
             this.ExecuteSaveEntry();
-        }
-
-        /// <summary>
-        /// Handler for the Settings Button click event.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The <see cref="RoutedEventArgs"/> instance containing the event data.
-        /// </param>
-        private void SettingsButtonClick(object sender, RoutedEventArgs e)
-        {
-            var sd = new Settings();
-            sd.ShowDialog();
         }
 
         /// <summary>
