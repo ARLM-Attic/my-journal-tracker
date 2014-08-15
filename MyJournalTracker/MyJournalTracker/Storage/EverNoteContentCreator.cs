@@ -9,16 +9,85 @@
 
 namespace MyJournalTracker.Storage
 {
+    using System;
+
+    using Evernote.EDAM.Type;
+
+    using MyJournalTracker.EverNoteSupport;
+    using MyJournalTracker.Helper;
+
     /// <summary>
     /// The ever note content creator.
     /// </summary>
     public class EverNoteContentCreator
     {
+        /// <summary>
+        /// The time helper.
+        /// </summary>
+        private readonly TimeHelper timeHelper = new TimeHelper();
+
+        /// <summary>
+        /// The evernote access.
+        /// </summary>
+        private readonly IAbstractEvernoteAccess evernoteAccess;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EverNoteContentCreator"/> class.
+        /// </summary>
+        /// <param name="authToken">
+        /// The auth token.
+        /// </param>
+        public EverNoteContentCreator(string authToken)
+        {
+            this.evernoteAccess = new EvernoteAccess(authToken);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EverNoteContentCreator"/> class for Unit-Testing
+        /// </summary>
+        /// <param name="abstractEvernoteAccess">
+        /// The abstract Evernote Access.
+        /// </param>
+        public EverNoteContentCreator(IAbstractEvernoteAccess abstractEvernoteAccess)
+        {
+            this.evernoteAccess = abstractEvernoteAccess;
+        }
+
+        /// <summary>
+        /// The read note book of the year.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string RetrieveNoteBookGuidOfTheYear()
+        {
+            var currentYear = this.timeHelper.GetCurrentYear();
+            var notebooks = this.evernoteAccess.ListNotebooks();
+            var notebook = notebooks.Find(nb => nb.Name == currentYear);
+
+            // notebook of the year found. return guid
+            if (notebook != null)
+            {
+                return notebook.Guid;
+            }
+
+            // No Notebook of the year found. Create it.
+            notebook = new Notebook
+                           {
+                               Guid = Guid.NewGuid().ToString(),
+                               Name = currentYear,
+                               ServiceCreated = TimeCapsule.GetCurrentTime().ToEvernoteTimeStamp()
+                           };
+
+            this.evernoteAccess.CreateNotebook(notebook);
+            return notebook.Guid;
+        }
+
         /*
             let everNoteAccess:AbstractEvernoteAccess
     let everNoteContentHelper = EverNoteContentHelper()
     let timeHelper = TimeHelper()
-    
+           
     public init()
     {
         everNoteAccess = EverNoteAccess()
@@ -256,5 +325,5 @@ namespace MyJournalTracker.Storage
             })
     }
          */
+        }
     }
-}

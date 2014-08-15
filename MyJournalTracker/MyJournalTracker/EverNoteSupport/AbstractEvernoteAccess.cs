@@ -9,11 +9,35 @@
 
 namespace MyJournalTracker.EverNoteSupport
 {
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+
+    using Evernote.EDAM.Type;
+
     /// <summary>
     /// The abstract evernote access.
     /// </summary>
     public interface IAbstractEvernoteAccess
     {
+        /// <summary>
+        /// all notebooks from the evernote account.
+        /// </summary>
+        /// <returns>
+        /// The List of Notebooks
+        /// </returns>
+        List<Notebook> ListNotebooks();
+
+        /// <summary>
+        /// The create notebook.
+        /// </summary>
+        /// <param name="notebook">
+        /// The notebook.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Notebook"/>.
+        /// </returns>
+        Notebook CreateNotebook(Notebook notebook);
+
         /*
         func listNotebooksWithSuccess( success: ((notebooks:[AnyObject]!) -> Void)?, failure:((error:NSError!) -> Void)?)
         func createNotebook(notebook:EDAMNotebook?, success:((notebook:EDAMNotebook!) -> Void)?, failure:((error:NSError!)-> Void)?)
