@@ -11,7 +11,7 @@ namespace MyJournalTracker.Tests.UnitTests
 {
     using System.IO;
 
-    using MyJournalTracker.Utility;
+    using Utility;
 
     using NUnit.Framework;
 
@@ -30,11 +30,11 @@ namespace MyJournalTracker.Tests.UnitTests
             var bc = new BitmapConverter();
 
             // check for test data
-            const string TestDataScreenshotPng = @".\Test Data\Screenshot.png";
-            Assert.IsTrue(File.Exists(TestDataScreenshotPng));
+            const string testDataScreenshotPng = @".\Test Data\Screenshot.png";
+            Assert.IsTrue(File.Exists(testDataScreenshotPng));
 
-            var destinationJPEGFile = PathUtility.CreateTemporaryPathname();        
-            bc.ConvertToJpeg(TestDataScreenshotPng, destinationJPEGFile);
+            var destinationJpegFile = PathUtility.CreateTemporaryPathname();        
+            bc.ConvertToJpeg(testDataScreenshotPng, destinationJpegFile);
         }
     }
 }

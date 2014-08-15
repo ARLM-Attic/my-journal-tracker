@@ -63,6 +63,7 @@
     <Compile Include="UnitTests\DropboxSupportTests.cs" />
     <Compile Include="UnitTests\EntryTests.cs" />
     <Compile Include="UnitTests\PathUtilityTests.cs" />
+    <Compile Include="UnitTests\TimeHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyJournalTracker\MyJournalTracker.csproj">

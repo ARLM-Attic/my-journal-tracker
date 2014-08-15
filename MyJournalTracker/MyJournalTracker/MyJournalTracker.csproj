@@ -101,9 +101,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EverNoteSupport\AbstractEvernoteAccess.cs" />
+    <Compile Include="EverNoteSupport\EvernoteAccess.cs" />
     <Compile Include="Form\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper\TimeCapsule.cs" />
+    <Compile Include="Helper\TimeHelper.cs" />
     <Compile Include="Logic\MainWindowController.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="SnippingTool\SnippingTool.cs">
@@ -112,6 +116,8 @@
     <Compile Include="SnippingTool\SnippingTool.Designer.cs">
       <DependentUpon>SnippingTool.cs</DependentUpon>
     </Compile>
+    <Compile Include="Storage\EverNoteContentCreator.cs" />
+    <Compile Include="Storage\EvernoteSaver.cs" />
     <Compile Include="Utility\BitmapConverter.cs" />
     <Compile Include="Utility\Converter.cs" />
     <Compile Include="Utility\DropboxSupport.cs" />

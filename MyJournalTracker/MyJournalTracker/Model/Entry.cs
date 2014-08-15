@@ -175,12 +175,14 @@ namespace MyJournalTracker.Model
 
             set
             {
-                if (this.entryPicture == null || !this.entryPicture.Equals(value))
+                if (this.entryPicture != null && this.entryPicture.Equals(value))
                 {
-                    this.entryPicture = value;
-                    this.IsDirty = true;
-                    this.OnPropertyChanged("EntryPicture");
+                    return;
                 }
+
+                this.entryPicture = value;
+                this.IsDirty = true;
+                this.OnPropertyChanged("EntryPicture");
             }
         }
 
@@ -202,12 +204,14 @@ namespace MyJournalTracker.Model
 
             set
             {
-                if (this.entryText != value)
+                if (this.entryText == value)
                 {
-                    this.entryText = value;
-                    this.IsDirty = true;
-                    this.OnPropertyChanged("EntryText");
+                    return;
                 }
+
+                this.entryText = value;
+                this.IsDirty = true;
+                this.OnPropertyChanged("EntryText");
             }
         }
 
