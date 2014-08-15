@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyJournalTracker", "MyJournalTracker\MyJournalTracker.csproj", "{76053DB5-B367-4D85-9E86-36FF60EF5094}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5} = {7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyJournalTracker.Tests", "MyJournalTracker.Tests\MyJournalTracker.Tests.csproj", "{CC3DCF68-3354-4FC8-92B7-A96CB8376E2B}"
 EndProject
@@ -12,9 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2CA1D2
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDAM", "..\..\..\GitHub\evernote-sdk-csharp\src\Evernote\EDAM.csproj", "{7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thrift", "..\..\..\GitHub\evernote-sdk-csharp\src\Thrift\Thrift.csproj", "{499EB63C-D74C-47E8-AE48-A2FC94538E9D}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
 		SccLocalPath0 = .
@@ -24,6 +31,12 @@ Global
 		SccProjectUniqueName2 = MyJournalTracker\\MyJournalTracker.csproj
 		SccProjectName2 = MyJournalTracker
 		SccLocalPath2 = MyJournalTracker
+		SccProjectUniqueName3 = ..\\..\\..\\GitHub\\evernote-sdk-csharp\\src\\Evernote\\EDAM.csproj
+		SccProjectName3 = Evernote
+		SccLocalPath3 = ..\\..\\..\\GitHub\\evernote-sdk-csharp\\src\\Evernote
+		SccProjectUniqueName4 = ..\\..\\..\\GitHub\\evernote-sdk-csharp\\src\\Thrift\\Thrift.csproj
+		SccProjectName4 = Thrift
+		SccLocalPath4 = ..\\..\\..\\GitHub\\evernote-sdk-csharp\\src\\Thrift
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +51,14 @@ Global
 		{CC3DCF68-3354-4FC8-92B7-A96CB8376E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3DCF68-3354-4FC8-92B7-A96CB8376E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC3DCF68-3354-4FC8-92B7-A96CB8376E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{499EB63C-D74C-47E8-AE48-A2FC94538E9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{499EB63C-D74C-47E8-AE48-A2FC94538E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{499EB63C-D74C-47E8-AE48-A2FC94538E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{499EB63C-D74C-47E8-AE48-A2FC94538E9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
