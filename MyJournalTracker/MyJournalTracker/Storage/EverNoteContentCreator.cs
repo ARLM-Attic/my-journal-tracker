@@ -10,6 +10,8 @@
 namespace MyJournalTracker.Storage
 {
     using System;
+    using System.Collections.Generic;
+    using System.Windows.Media.Imaging;
 
     using Evernote.EDAM.Type;
 
@@ -54,6 +56,13 @@ namespace MyJournalTracker.Storage
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EverNoteContentCreator"/> class.
+        /// </summary>
+        public EverNoteContentCreator()
+        {
+        }
+
+        /// <summary>
         /// The read note book of the year.
         /// </summary>
         /// <returns>
@@ -83,98 +92,92 @@ namespace MyJournalTracker.Storage
             return notebook.Guid;
         }
 
-        /*
-            let everNoteAccess:AbstractEvernoteAccess
-    let everNoteContentHelper = EverNoteContentHelper()
-    let timeHelper = TimeHelper()
-           
-    public init()
-    {
-        everNoteAccess = EverNoteAccess()
-    }
-    
-    public init(access:AbstractEvernoteAccess)
-    {
-        everNoteAccess = access
-    }
-
-    public func substituteWithTemplate(templateName:String, value:String) -> String
-    {
-        let template = self.everNoteContentHelper.readTemplate(templateName)
-        return template.stringByReplacingOccurrencesOfString("%1", withString: value, options: NSStringCompareOptions.LiteralSearch, range: nil)
-    }
-    
-    func createEvernoteContent(text:String) -> String
-    {
-        return
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-            "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">" +
-            "<en-note>" +
-            "\(text)" +
-            "</en-note>"
-    }
-    
-    func createNewNoteWithText(notebookGuid:String, resource:EDAMResource?, text:String, image:UIImage?, success: (note:EDAMNote) -> Void, failure: (error:NSError) -> Void)
-    {
-        // Create an EverNote note object
-        
-        let noteContent = createEvernoteContent(text)
-        
-        let note = EDAMNote(guid: nil, title: timeHelper.getCurrentDateInLocaleFormat(), content: noteContent, contentHash: nil, contentLength: CInt(countElements(noteContent)), created: 0, updated: 0, deleted: 0, active: true, updateSequenceNum: 0, notebookGuid: notebookGuid, tagGuids: nil, resources: nil, attributes: nil, tagNames: nil )
-        
-        
-        if (resource)
+        /// <summary>
+        /// The substitute with template.
+        /// </summary>
+        /// <param name="templateName">
+        /// The template name.
+        /// </param>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string SubstituteWithTemplate(string templateName, string value)
         {
-            if (!note.resources)
-            {
-                note.resources = NSMutableArray()
-            }
-            note.resources.addObject(resource)
+            var template = EvernoteHelperFunction.ReadTemplate(templateName);
+            return template.Replace("%1", value);
         }
+
+        /// <summary>
+        /// create the correct en-note evernote content markaup
+        /// </summary>
+        /// <param name="text">
+        /// the raw xhtml content
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string CreateEvernoteContent(string text)
+        {
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                   + "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">" + "<en-note>" + text
+                   + "</en-note>";
+        }
+
+        /// <summary>
+        /// This function crates a new Note with text and resource3
+        /// </summary>
+        /// <param name="notebookGuid">
+        /// The notebook guid of the notebook of  the year
+        /// </param>
+        /// <param name="text">
+        /// The text.
+        /// </param>
+        /// <param name="resource">
+        /// The resource.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        public Note CreateNewNoteWithText(string notebookGuid, string text, Resource resource)
+        {
+            var noteContent = this.CreateEvernoteContent(text);
+
+            var note = new Note
+                           {
+                               Title = this.timeHelper.GetCurrentDateInLocaleFormat(),
+                               Content = noteContent,
+                               ContentLength = noteContent.Length
+                           };
+
+            if (resource != null)
+            {
+                note.Resources = new List<Resource> { resource };
+            }
         
+            // Create note in the store
+            this.evernoteAccess.CreateNote(note);
+            return note;
+        }
+
+    public Note UpdateNoteWithText(Note note, string text, Resource resource )
+    {
+        note.Content = CreateEvernoteContent(text);
         
+        if (resource != null)
+        {
+            if (note.Resources == null)
+            {
+                note.Resources = new List<Resource> ();
+            }
+            note.Resources.Add(resource);
+        }
+
         // Create note in the store
-
-        everNoteAccess.createNote(note,
-            {
-                (note) -> Void in
-                NSLog("Note created: \(note.content)")
-                success(note: note)
-            },
-            {
-                (error) -> Void in
-                NSLog("Error: %@", error.description)
-                failure(error: error)
-            })
-    }
-
-    func updateNoteWithText(note:EDAMNote, resource:EDAMResource?, text:String, image:UIImage?, success: (note:EDAMNote) -> Void, failure: (error:NSError) -> Void)
-    {
-        note.content = createEvernoteContent(text)
-        
-        NSLog("This content will be send to everote: \(note.content)")
-        NSLog("title of the note: \(note.title)")
-        
-        if (resource)
-        {
-            if (!note.resources)
-            {
-                note.resources = NSMutableArray()
-            }
-            note.resources.addObject(resource)
-        }
-        
-        everNoteAccess.updateNote(note,
-            {
-                (note) -> Void in
-                NSLog("Note updated: \(note.content)")
-                success(note: note)
-            },
-            {
-                (error) -> Void in
-                NSLog("Error: %@", error.description)
-                failure(error: error)
-            })
+        this.evernoteAccess.UpdateNote(note);
+        return note;
     }
     
 

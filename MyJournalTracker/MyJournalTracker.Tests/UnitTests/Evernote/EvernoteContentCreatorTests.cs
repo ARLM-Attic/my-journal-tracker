@@ -8,6 +8,7 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
 {
     using System;
 
+    using MyJournalTracker.EverNoteSupport;
     using MyJournalTracker.Helper;
     using MyJournalTracker.Storage;
 
@@ -35,6 +36,40 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
             // After I have retrieved a notebook of the year, a notebook must be created
             var notebook = testAccess.ListNotebooks().Find(n => n.Guid == notebookGuid);
             Assert.AreEqual("2013", notebook.Name);
+        }
+
+        /// <summary>
+        /// The test read from template.
+        /// </summary>
+        [Test]
+        public void TestReadFromTemplate()
+        {
+            var paragraph = EvernoteHelperFunction.ReadTemplate("paragraph");
+            Assert.IsNotEmpty(paragraph);
+        }
+
+        /// <summary>
+        /// The test substitute with template.
+        /// </summary>
+        [Test]
+        public void TestSubstituteWithTemplate()
+        {
+            var contentCreator = new EverNoteContentCreator();
+            var template = contentCreator.SubstituteWithTemplate("paragraph", value: "this is me here!");
+            Assert.AreEqual("<p style=\"font-family:'Helvetica'; line-height:1.8em; font-size:1em;\">this is me here!</p>", template);
+        }
+
+        /// <summary>
+        /// Test function <see cref="EverNoteContentCreator.CreateEvernoteContent"/>
+        /// </summary>
+        [Test]
+        public void TestCreateEvernoteContent()
+        {
+            var contentCreator = new EverNoteContentCreator();
+            var evernoteContent = contentCreator.CreateEvernoteContent("this is a simple <b>markup</b>");
+            Assert.IsTrue(evernoteContent.Contains("this is a simple <b>markup</b>"));
+            Assert.IsTrue(evernoteContent.Contains("<en-note>"));
+            Assert.IsTrue(evernoteContent.Contains("</en-note>"));
         }
     }
 }

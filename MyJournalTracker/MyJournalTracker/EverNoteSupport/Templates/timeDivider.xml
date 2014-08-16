@@ -1,0 +1,5 @@
+<div style="background-image: linear-gradient(to right , rgb(255,255,255) 0%, rgb(255,251,187) 85%);
+            background-image: -webkit-linear-gradient(left , rgb(255,255,255) 0%, rgb(255,251,187) 85%);
+            height:22px; margin-left:0px; margin-right:0px; text-align:right;">
+    %1
+</div>

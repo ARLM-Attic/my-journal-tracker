@@ -60,5 +60,33 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
 
             return new Notebook();
         }
+
+        /// <summary>
+        /// simulate a note created in the EvernoteStore
+        /// </summary>
+        /// <param name="note">
+        /// The note.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        public Note CreateNote(Note note)
+        {
+            return note;
+        }
+
+        /// <summary>
+        /// simulate a note updated in the EvernoteStore
+        /// </summary>
+        /// <param name="note">
+        /// The note.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        public Note UpdateNote(Note note)
+        {
+            return note;
+        }
     }
 }

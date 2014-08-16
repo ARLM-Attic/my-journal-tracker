@@ -107,5 +107,33 @@ namespace MyJournalTracker.EverNoteSupport
         {
             return this.noteStore.createNotebook(this.authToken, notebook);
         }
+
+        /// <summary>
+        /// The create note.
+        /// </summary>
+        /// <param name="note">
+        /// The note.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        public Note CreateNote(Note note)
+        {
+            return this.noteStore.createNote(this.authToken, note);
+        }
+
+        /// <summary>
+        /// The update note.
+        /// </summary>
+        /// <param name="note">
+        /// The note.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        public Note UpdateNote(Note note)
+        {
+            return this.noteStore.updateNote(this.authToken, note);
+        }
     }
 }

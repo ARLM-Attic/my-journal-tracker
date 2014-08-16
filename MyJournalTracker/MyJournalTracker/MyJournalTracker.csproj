@@ -118,7 +118,7 @@
       <DependentUpon>SnippingTool.cs</DependentUpon>
     </Compile>
     <Compile Include="Storage\EverNoteContentCreator.cs" />
-    <Compile Include="Storage\EvernoteHelperFunction.cs" />
+    <Compile Include="EverNoteSupport\EvernoteHelperFunction.cs" />
     <Compile Include="Storage\EvernoteSaver.cs" />
     <Compile Include="Utility\BitmapConverter.cs" />
     <Compile Include="Utility\Converter.cs" />
@@ -236,6 +236,10 @@
       <Project>{499EB63C-D74C-47E8-AE48-A2FC94538E9D}</Project>
       <Name>Thrift</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EverNoteSupport\Templates\paragraph.xml" />
+    <EmbeddedResource Include="EverNoteSupport\Templates\timeDivider.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -47,5 +47,27 @@ namespace MyJournalTracker.EverNoteSupport
         func getNoteContentWithGuid(guid: String?, success: ((String!) -> Void)?, failure: ((NSError!) -> Void)?)
         func updateNote(note: EDAMNote?, success: ((EDAMNote!) -> Void)?, failure: ((NSError!) -> Void)?)
         */
+
+        /// <summary>
+        /// Create an new Note
+        /// </summary>
+        /// <param name="note">
+        /// The note.
+        /// </param>
+        /// <returns>
+        /// The newly created <see cref="Note"/>.
+        /// </returns>
+        Note CreateNote(Note note);
+
+        /// <summary>
+        /// The update note.
+        /// </summary>
+        /// <param name="note">
+        /// The note.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        Note UpdateNote(Note note);
     }
 }
