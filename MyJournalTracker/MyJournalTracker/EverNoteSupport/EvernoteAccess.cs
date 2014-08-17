@@ -135,5 +135,39 @@ namespace MyJournalTracker.EverNoteSupport
         {
             return this.noteStore.updateNote(this.authToken, note);
         }
+
+        /// <summary>
+        /// The find notes.
+        /// </summary>
+        /// <param name="filter">
+        /// The filter.
+        /// </param>
+        /// <param name="offset">
+        /// The offset.
+        /// </param>
+        /// <param name="maxNotes">
+        /// The max notes.
+        /// </param>
+        /// <returns>
+        /// The <see cref="NoteList"/>.
+        /// </returns>
+        public NoteList FindNotes(NoteFilter filter, int offset, int maxNotes)
+        {
+            return this.noteStore.findNotes(this.authToken, filter, offset, maxNotes);
+        }
+
+        /// <summary>
+        /// The get note content with guid.
+        /// </summary>
+        /// <param name="guid">
+        /// The guid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string GetNoteContentWithGuid(string guid)
+        {
+            return this.noteStore.getNoteContent(this.authToken, guid);
+        }
     }
 }

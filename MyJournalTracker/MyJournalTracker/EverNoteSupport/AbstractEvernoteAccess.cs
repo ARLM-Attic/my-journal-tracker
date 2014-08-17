@@ -12,6 +12,7 @@ namespace MyJournalTracker.EverNoteSupport
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
+    using Evernote.EDAM.NoteStore;
     using Evernote.EDAM.Type;
 
     /// <summary>
@@ -69,5 +70,33 @@ namespace MyJournalTracker.EverNoteSupport
         /// The <see cref="Note"/>.
         /// </returns>
         Note UpdateNote(Note note);
+
+        /// <summary>
+        /// The find notes.
+        /// </summary>
+        /// <param name="filter">
+        /// The filter.
+        /// </param>
+        /// <param name="offset">
+        /// The offset.
+        /// </param>
+        /// <param name="maxNotes">
+        /// The max notes.
+        /// </param>
+        /// <returns>
+        /// The <see cref="NoteList"/>.
+        /// </returns>
+        NoteList FindNotes(NoteFilter filter, int offset, int maxNotes);
+
+        /// <summary>
+        /// The get note content with guid.
+        /// </summary>
+        /// <param name="guid">
+        /// The guid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        string GetNoteContentWithGuid(string guid);
     }
 }

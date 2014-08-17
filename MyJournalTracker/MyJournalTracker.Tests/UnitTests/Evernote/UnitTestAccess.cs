@@ -9,6 +9,7 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
     using System;
     using System.Collections.Generic;
 
+    using global::Evernote.EDAM.NoteStore;
     using global::Evernote.EDAM.Type;
 
     using MyJournalTracker.EverNoteSupport;
@@ -87,6 +88,40 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
         public Note UpdateNote(Note note)
         {
             return note;
+        }
+
+        /// <summary>
+        /// The find notes.
+        /// </summary>
+        /// <param name="filter">
+        /// The filter.
+        /// </param>
+        /// <param name="offset">
+        /// The offset.
+        /// </param>
+        /// <param name="maxNotes">
+        /// The max notes.
+        /// </param>
+        /// <returns>
+        /// The <see cref="NoteList"/>.
+        /// </returns>
+        public NoteList FindNotes(NoteFilter filter, int offset, int maxNotes)
+        {
+            return new NoteList();
+        }
+
+        /// <summary>
+        /// The get note content with guid.
+        /// </summary>
+        /// <param name="guid">
+        /// The guid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string GetNoteContentWithGuid(string guid)
+        {
+            return "test content";
         }
     }
 }

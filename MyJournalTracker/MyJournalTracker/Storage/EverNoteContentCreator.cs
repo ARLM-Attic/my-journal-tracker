@@ -13,6 +13,7 @@ namespace MyJournalTracker.Storage
     using System.Collections.Generic;
     using System.Windows.Media.Imaging;
 
+    using Evernote.EDAM.NoteStore;
     using Evernote.EDAM.Type;
 
     using MyJournalTracker.EverNoteSupport;
@@ -106,7 +107,7 @@ namespace MyJournalTracker.Storage
         /// </returns>
         public string SubstituteWithTemplate(string templateName, string value)
         {
-            var template = EvernoteHelperFunction.ReadTemplate(templateName);
+            var template = EvernoteContentHelper.ReadTemplate(templateName);
             return template.Replace("%1", value);
         }
 
@@ -129,204 +130,112 @@ namespace MyJournalTracker.Storage
         /// <summary>
         /// This function crates a new Note with text and resource3
         /// </summary>
-        /// <param name="notebookGuid">
-        /// The notebook guid of the notebook of  the year
-        /// </param>
-        /// <param name="text">
-        /// The text.
-        /// </param>
-        /// <param name="resource">
-        /// The resource.
+        /// <param name="note">
+        /// The note.
         /// </param>
         /// <returns>
         /// The <see cref="Note"/>.
         /// </returns>
-        public Note CreateNewNoteWithText(string notebookGuid, string text, Resource resource)
+        public Note SaveNote(Note note)
         {
-            var noteContent = this.CreateEvernoteContent(text);
+            note.Title = this.timeHelper.GetCurrentDateInLocaleFormat();
+            note.ContentLength = note.Content.Length;
 
-            var note = new Note
-                           {
-                               Title = this.timeHelper.GetCurrentDateInLocaleFormat(),
-                               Content = noteContent,
-                               ContentLength = noteContent.Length
-                           };
-
-            if (resource != null)
+            if (string.IsNullOrEmpty(note.Guid))
             {
-                note.Resources = new List<Resource> { resource };
+                this.evernoteAccess.CreateNote(note);
             }
-        
-            // Create note in the store
-            this.evernoteAccess.CreateNote(note);
+            else
+            {
+                this.evernoteAccess.UpdateNote(note);
+            }
+
             return note;
         }
 
-    public Note UpdateNoteWithText(Note note, string text, Resource resource )
-    {
-        note.Content = CreateEvernoteContent(text);
-        
-        if (resource != null)
+        /// <summary>
+        /// The read note of the current day.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        public Note ReadNoteOfTheCurrentDay()
         {
-            if (note.Resources == null)
+            var notebookGuid = this.RetrieveNoteBookGuidOfTheYear();
+            var dateValue = "\"" + this.timeHelper.GetCurrentDateInLocaleFormat() + "\"";
+            var noteFilter = new NoteFilter { NotebookGuid = notebookGuid, Ascending = false, Words = dateValue };
+
+            var notes = this.evernoteAccess.FindNotes(noteFilter, 0, 1);
+            if (notes.Notes.Count > 0)
             {
-                note.Resources = new List<Resource> ();
+                var note = notes.Notes[0];
+                note.Content = this.evernoteAccess.GetNoteContentWithGuid(note.Guid);
+                return note;
             }
-            note.Resources.Add(resource);
+
+            return new Note();
         }
 
-        // Create note in the store
-        this.evernoteAccess.UpdateNote(note);
-        return note;
-    }
-    
+        /// <summary>
+        /// The append journal entry.
+        /// </summary>
+        /// <param name="note">
+        /// The note.
+        /// </param>
+        /// <param name="journalText">
+        /// The journal text.
+        /// </param>
+        /// <param name="image">
+        /// The image.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Note"/>.
+        /// </returns>
+        public Note AppendJournalEntry(Note note, string journalText, BitmapSource image)
+        {
+            var lines = EvernoteContentHelper.SplitIntoLines(journalText);
+            var noteTags = EvernoteContentHelper.SplitContentInTags(note);
+            var fullnote = noteTags.ExtractedContent;
 
-    
-    public func readNoteBookOfTheYear(readFunction:(String)->Void)
-    {
-        let currentYear = timeHelper.getCurrentYear()
+            foreach (var line in lines)
+            {
+                var noteLine = this.SubstituteWithTemplate("paragraph", line);
+                fullnote += noteLine;
+            }
 
-        var notebookGuid = ""
-        
-        everNoteAccess.listNotebooksWithSuccess(
-            { (notebooks) -> Void in
-                for n:AnyObject in notebooks
+            if (image != null)
+            {
+                var resource = EvernoteContentHelper.CreateResourceFromImage(image);
+                if (note.Resources == null)
                 {
-                    let notebook = n as EDAMNotebook
-                    NSLog("Examine notebook %@", notebook.name)
-                    
-                    if (notebook.name == self.timeHelper.getCurrentYear())
-                    {
-                        readFunction(notebook.guid)
-                        return
-                    }
+                    note.Resources = new List<Resource>();
                 }
-   
-                let currentTimeStamp = NSDate().enedamTimestamp()
-                
-                // No Notebook of the year found. Create it.
-                
-                let notebook = EDAMNotebook(guid: nil, name: currentYear,
-                    updateSequenceNum: 0, defaultNotebook: false, serviceCreated: currentTimeStamp, serviceUpdated: currentTimeStamp, publishing: nil, published: false, stack: nil, sharedNotebookIds: nil, sharedNotebooks: nil, businessNotebook: nil, contact: nil, restrictions: nil   )
-                
-                self.everNoteAccess.createNotebook(notebook, success:
-                    {
-                        (newNotebook) -> Void in
-                        readFunction(newNotebook.guid)
-                    },
-                    failure:
-                    {
-                        (error) -> Void in
-                        NSLog("Error creating notebook: %@", error)
-                    }
-                )
-             },
-            {
-                (error) -> Void in
-                NSLog("Error: %@", error.description)
-            })
-    }
-    
-    func readExistingNote(notebookGuid:String, note:EDAMNote, readFunction:(String, EDAMNote?, (ennoteAttributes:String!, content:String))->Void)
-    {
-        self.everNoteAccess.getNoteContentWithGuid(note.guid,
-            success:
-            {
-                (content) -> Void in
-                let contentHelper = EverNoteContentHelper()
-                
-                let noteContent = contentHelper.extractNoteText(content)
-                NSLog("content read: %@", content)
-                readFunction(notebookGuid, note, noteContent)
-            },
-            failure:
-            {
-                (error) -> Void in
-                NSLog("error in getnotecontent %@", error )
-            })
-    }
-    
-    func readNoteOfTheCurrentDay(readFunction:(notebookGuid:String, EDAMNote?, (ennoteAttributes:String!, content:String))->Void)
-    {
-        readNoteBookOfTheYear({
-            (notebookGuidOfTheYear) -> Void in
-            
-            let dateValue = "\"" + self.timeHelper.getCurrentDateInLocaleFormat() + "\""
-            
-            NSLog("Notebook of the year: %@", notebookGuidOfTheYear)
-            NSLog("Note of the day: %@", dateValue)
-            
-            let noteFilter = EDAMNoteFilter(order: 0, ascending: false, words: dateValue, notebookGuid: notebookGuidOfTheYear, tagGuids: nil, timeZone: nil, inactive: false, emphasized: nil)
-            let guidNote:String? = nil
-            self.everNoteAccess.findNotesWithFilter(noteFilter, offset: 0, maxNotes: 1,
-                success:
-                { (
-                    notelist) -> Void in
-                    if (notelist.notes.count > 0)
-                    {
-                        let n:EDAMNote = notelist.notes[0] as EDAMNote
-                        NSLog("Note count %d ", notelist.notes.count)
-                        NSLog("Note title %@", n.title)
-                        self.readExistingNote(notebookGuidOfTheYear, note: n, readFunction)
-                    }
-                    else
-                    {
-                        readFunction(notebookGuid: notebookGuidOfTheYear, nil, (nil,""))
-                    }
-                 },
-                failure: {
-                    (error) -> Void in
-                    NSLog("Error: %@", error.description)
-                } )
-            })
-    }
-     
-    public func appendJournalText(journalText: String, image: UIImage?, newFullNote: (guid:String, note:EDAMNote?, resource:EDAMResource?, fullnote:String)->Void)
-    {
-        readNoteOfTheCurrentDay({
-            (notebookGuid, note, content) -> Void in
-                let evernoteContentHelper = EverNoteContentHelper()
-                var fullnote = content.content
-                let time = self.timeHelper.getCurrentTimeInLocaleFormat()
-                
-                let lines = evernoteContentHelper.splitIntoLines(journalText)
-                for line in lines
-                {
-                    let noteLine = self.substituteWithTemplate("paragraph", value: line)
-                    NSLog("subst line : \(noteLine)")
-                    fullnote += noteLine
-                }
-            
-                var resource:EDAMResource? = nil
-            
-                if (image)
-                {
-                    resource = evernoteContentHelper.createResourceFromImage(image!)
-                    fullnote += "<p>" + evernoteContentHelper.enMediaTagWithResource(resource!, width: 0, height: 0) + "</p>"
-                }
-                fullnote += self.substituteWithTemplate("timeDivider", value: time)
-            
-                newFullNote(guid: notebookGuid, note: note, resource: resource, fullnote: fullnote)
-            })
-    }
-    
-    public func saveJournalEntryToEvernote(journalText: String, image: UIImage?, success: (note:EDAMNote) -> Void, failure: (error:NSError) -> Void)
-    {
-        appendJournalText(journalText, image: image,
-            {
-                (notebookGuid, note, resource, fullText) -> Void in
 
-                NSLog("Trying to save Journal entry: \(notebookGuid) - \(note) text: \(fullText)")
-                if (note == nil)
-                {
-                    self.createNewNoteWithText(notebookGuid, resource: resource, text: fullText, image: image, success, failure)
-                }
-                else
-                {
-                    self.updateNoteWithText(note!, resource: resource, text: fullText, image: image, success, failure)
-                }
-            })
-    }
-         */
+                note.Resources.Add(resource);
+                fullnote += "<p>" + EvernoteContentHelper.EnMediaTagWithResource(resource, 0, 0) + "</p>";
+            }
+
+            var time = new TimeHelper().GetCurrentTimeInLocaleFormat();
+            fullnote += this.SubstituteWithTemplate("timeDivider", time);
+            note.Content = this.CreateEvernoteContent(fullnote);
+
+            return note;
+        }
+
+        /// <summary>
+        /// The save journal entry to evernote.
+        /// </summary>
+        /// <param name="journalText">
+        /// The journal text.
+        /// </param>
+        /// <param name="image">
+        /// The image.
+        /// </param>
+        public void SaveJournalEntryToEvernote(string journalText, BitmapSource image)
+        {
+            var note = this.ReadNoteOfTheCurrentDay();
+            note = this.AppendJournalEntry(note, journalText, image);
+            this.SaveNote(note);
         }
     }
+}

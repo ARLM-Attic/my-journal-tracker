@@ -44,7 +44,7 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
         [Test]
         public void TestReadFromTemplate()
         {
-            var paragraph = EvernoteHelperFunction.ReadTemplate("paragraph");
+            var paragraph = EvernoteContentHelper.ReadTemplate("paragraph");
             Assert.IsNotEmpty(paragraph);
         }
 
