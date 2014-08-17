@@ -30,10 +30,12 @@ namespace MyJournalTracker.Logic
         /// </param>
         public void CreateNewEntry(Entry entry)
         {
-            entry.Save(GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathEntries));
+            var entrySaver = new DropboxSupport();
+
+            entrySaver.Save(entry, GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathEntries));
             if (entry.HasPicture)
             {
-                entry.SavePicture(GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathPhotos));
+                entrySaver.SavePicture(entry, GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathPhotos));
             }
         }
 

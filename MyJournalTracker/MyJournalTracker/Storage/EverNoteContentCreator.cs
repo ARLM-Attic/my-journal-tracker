@@ -11,13 +11,13 @@ namespace MyJournalTracker.Storage
 {
     using System;
     using System.Collections.Generic;
-    using System.Windows.Media.Imaging;
 
     using Evernote.EDAM.NoteStore;
     using Evernote.EDAM.Type;
 
     using MyJournalTracker.EverNoteSupport;
     using MyJournalTracker.Helper;
+    using MyJournalTracker.Model;
 
     /// <summary>
     /// The ever note content creator.
@@ -182,18 +182,15 @@ namespace MyJournalTracker.Storage
         /// <param name="note">
         /// The note.
         /// </param>
-        /// <param name="journalText">
-        /// The journal text.
-        /// </param>
-        /// <param name="image">
-        /// The image.
+        /// <param name="entry">
+        /// The entry.
         /// </param>
         /// <returns>
         /// The <see cref="Note"/>.
         /// </returns>
-        public Note AppendJournalEntry(Note note, string journalText, BitmapSource image)
+        public Note AppendJournalEntry(Note note, Entry entry)
         {
-            var lines = EvernoteContentHelper.SplitIntoLines(journalText);
+            var lines = EvernoteContentHelper.SplitIntoLines(entry.EntryText);
             var noteTags = EvernoteContentHelper.SplitContentInTags(note);
             var fullnote = noteTags.ExtractedContent;
 
@@ -203,9 +200,9 @@ namespace MyJournalTracker.Storage
                 fullnote += noteLine;
             }
 
-            if (image != null)
+            if (entry.EntryPicture != null)
             {
-                var resource = EvernoteContentHelper.CreateResourceFromImage(image);
+                var resource = EvernoteContentHelper.CreateResourceFromImage(entry.EntryPicture);
                 if (note.Resources == null)
                 {
                     note.Resources = new List<Resource>();
@@ -225,16 +222,13 @@ namespace MyJournalTracker.Storage
         /// <summary>
         /// The save journal entry to evernote.
         /// </summary>
-        /// <param name="journalText">
-        /// The journal text.
+        /// <param name="entry">
+        /// The entry.
         /// </param>
-        /// <param name="image">
-        /// The image.
-        /// </param>
-        public void SaveJournalEntryToEvernote(string journalText, BitmapSource image)
+        public void SaveJournalEntryToEvernote(Entry entry)
         {
             var note = this.ReadNoteOfTheCurrentDay();
-            note = this.AppendJournalEntry(note, journalText, image);
+            note = this.AppendJournalEntry(note, entry);
             this.SaveNote(note);
         }
     }

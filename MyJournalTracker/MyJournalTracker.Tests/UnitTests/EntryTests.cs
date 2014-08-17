@@ -12,8 +12,8 @@ namespace MyJournalTracker.Tests.UnitTests
 {
     using System.IO;
 
-    using MyJournalTracker.Logic;
     using MyJournalTracker.Model;
+    using MyJournalTracker.Utility;
 
     using NUnit.Framework;
 
@@ -32,13 +32,14 @@ namespace MyJournalTracker.Tests.UnitTests
         [Test]
         public void DeleteTest()
         {
+            var ds = new DropboxSupport();
             var target = new Entry();
             const string FolderPath = ".";
 
-            target.Save(FolderPath);
+            ds.Save(target, FolderPath);
             Assert.IsTrue(File.Exists(target.FileName));
 
-            target.Delete(FolderPath);
+            ds.Delete(target, FolderPath);
             Assert.IsFalse(File.Exists(target.FileName));
         }
 
@@ -48,13 +49,14 @@ namespace MyJournalTracker.Tests.UnitTests
         [Test]
         public void SaveTest()
         {
+            var ds = new DropboxSupport();
             var target = new Entry();
-            target.Save(".");
+            ds.Save(target, ".");
 
             Assert.IsFalse(target.IsDirty);
             Assert.IsTrue(File.Exists(target.FileName));
 
-            Entry loaded = Entry.LoadFromFile(target.FileName);
+            var loaded = ds.LoadFromFile(target.FileName);
             Assert.AreEqual(target, loaded);
         }
 
@@ -64,13 +66,14 @@ namespace MyJournalTracker.Tests.UnitTests
         [Test]
         public void SaveTest1()
         {
+            var ds = new DropboxSupport();
             var target = new Entry { Starred = true, EntryText = "This is the body.\n나는 바디다." };
-            target.Save(".");
+            ds.Save(target, ".");
 
             Assert.IsFalse(target.IsDirty);
             Assert.IsTrue(File.Exists(target.FileName));
 
-            Entry loaded = Entry.LoadFromFile(target.FileName);
+            var loaded = ds.LoadFromFile(target.FileName);
             Assert.AreEqual(target, loaded);
         }
 

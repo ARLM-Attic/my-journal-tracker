@@ -87,7 +87,8 @@ namespace MyJournalTracker.Tests.SpecFlow
         [When(@"I click on Save")]
         public void WhenIClickOnSave()
         {
-            this.entry.Save(this.pathDropBox);
+            var ds = new DropboxSupport();
+            ds.Save(this.entry, this.pathDropBox);
         }
 
         #endregion
