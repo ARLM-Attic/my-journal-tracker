@@ -15,14 +15,23 @@ namespace MyJournalTracker.Logic
 
     using MyJournalTracker.EverNoteSupport;
     using MyJournalTracker.Model;
-    using MyJournalTracker.Utility;
 
     /// <summary>
     /// The main window controller.
     /// </summary>
     public class MainWindowController
     {
-        #region Public Methods and Operators
+        /// <summary>
+        /// The evernote content creator.
+        /// </summary>
+        private EverNoteContentCreator evernoteContentCreator = null;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindowController"/> class.
+        /// </summary>
+        public MainWindowController()
+        {
+        }
 
         /// <summary>
         /// Creates a new journal <see cref="Entry"/>
@@ -32,9 +41,29 @@ namespace MyJournalTracker.Logic
         /// </param>
         public void CreateNewEntry(Entry entry)
         {
-            SaveEntryInEvernote(entry);
-            // SaveEntryInDropbox(entry);
+           this.SaveEntryInEvernote(entry);
+           ///// SaveEntryInDropbox(entry);
         }
+
+        /////// <summary>
+        /////// Gets the default journal path.
+        /////// </summary>
+        /////// <param name="pathItem">
+        /////// The path item.
+        /////// </param>
+        /////// <returns>
+        /////// path to the journal app.
+        /////// </returns>
+        ////private static string GetDefaultJournalPath(DropboxSupport.JournalPathItem pathItem)
+        ////{
+        ////    var journalPath = Properties.Settings.Default.JournalPath;
+        ////    if (string.IsNullOrEmpty(journalPath))
+        ////    {
+        ////        journalPath = DropboxSupport.GetJournalDayOnePath(pathItem);
+        ////    }
+
+        ////    return journalPath;
+        ////}
 
         /// <summary>
         /// The save entry in evernote.
@@ -42,55 +71,32 @@ namespace MyJournalTracker.Logic
         /// <param name="entry">
         /// The entry.
         /// </param>
-        private static void SaveEntryInEvernote(Entry entry)
+        private void SaveEntryInEvernote(Entry entry)
         {
-            var token = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\AndreClaassen\MyJournalTracker", "developerKey", null);
-            Debug.Assert(!string.IsNullOrEmpty(token), "please register your developer token firstt");
-
-            var evernoteContentCreator = new EverNoteContentCreator(token);
-            evernoteContentCreator.SaveJournalEntryToEvernote(entry);
-        }
-
-        /// <summary>
-        /// The save entry in dropbox.
-        /// </summary>
-        /// <param name="entry">
-        /// The entry.
-        /// </param>
-        private static void SaveEntryInDropbox(Entry entry)
-        {
-            var entrySaver = new DropboxSupport();
-            entrySaver.Save(entry, GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathEntries));
-            if (entry.HasPicture)
+            if (this.evernoteContentCreator == null)
             {
-                entrySaver.SavePicture(entry, GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathPhotos));
-            }
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Gets the default journal path.
-        /// </summary>
-        /// <param name="pathItem">
-        /// The path item.
-        /// </param>
-        /// <returns>
-        /// path to the journal app.
-        /// </returns>
-        private static string GetDefaultJournalPath(DropboxSupport.JournalPathItem pathItem)
-        {
-            var journalPath = Properties.Settings.Default.JournalPath;
-            if (string.IsNullOrEmpty(journalPath))
-            {
-                journalPath = DropboxSupport.GetJournalDayOnePath(pathItem);
+                var token = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\AndreClaassen\MyJournalTracker", "developerKey", null);
+                Debug.Assert(!string.IsNullOrEmpty(token), "please register your developer token firstt");
+                this.evernoteContentCreator = new EverNoteContentCreator(token);
             }
 
-            return journalPath;
+            this.evernoteContentCreator.SaveJournalEntryToEvernote(entry);
         }
 
-        #endregion
+        /////// <summary>
+        /////// The save entry in dropbox.
+        /////// </summary>
+        /////// <param name="entry">
+        /////// The entry.
+        /////// </param>
+        ////private void SaveEntryInDropbox(Entry entry)
+        ////{
+        ////    var entrySaver = new DropboxSupport();
+        ////    entrySaver.Save(entry, GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathEntries));
+        ////    if (entry.HasPicture)
+        ////    {
+        ////        entrySaver.SavePicture(entry, GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathPhotos));
+        ////    }
+        ////}
     }
 }

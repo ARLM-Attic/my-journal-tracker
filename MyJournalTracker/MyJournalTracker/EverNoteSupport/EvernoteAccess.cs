@@ -33,7 +33,8 @@ namespace MyJournalTracker.EverNoteSupport
         /// developer token above with a token from 
         /// https://www.evernote.com/api/DeveloperToken.action
         /// </remarks>
-        private const string EvernoteHostUrl = "sandbox.evernote.com";
+        ///private const string EvernoteHostUrl = "sandbox.evernote.com";
+        private const string EvernoteHostUrl = "www.evernote.com";
 
         /// <summary>
         /// The note store.
@@ -58,6 +59,8 @@ namespace MyJournalTracker.EverNoteSupport
         {
             this.authToken = authToken;
             var userStoreUrl = new Uri("https://" + EvernoteHostUrl + "/edam/user");
+
+            // var userStoreUrl = new Uri("https://www.evernote.com/shard/s9/notestore");
             TTransport userStoreTransport = new THttpClient(userStoreUrl);
             TProtocol userStoreProtocol = new TBinaryProtocol(userStoreTransport);
             var userStore = new UserStore.Client(userStoreProtocol);
