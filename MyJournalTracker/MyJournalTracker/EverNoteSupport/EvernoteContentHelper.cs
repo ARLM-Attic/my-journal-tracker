@@ -41,9 +41,14 @@ namespace MyJournalTracker.EverNoteSupport
             jpg.Frames.Add(BitmapFrame.Create(bitmapSource));
             jpg.Save(ms);
             resource.Mime = "image/jpeg";
-            resource.Data.Body = ms.ToArray();
-            resource.Data.BodyHash = new MD5CryptoServiceProvider().ComputeHash(resource.Data.Body);
+            var data = new Data
+                           {
+                               Body = ms.ToArray()
+                           };
 
+            data.BodyHash = new MD5CryptoServiceProvider().ComputeHash(data.Body);
+
+            resource.Data = data;
             return resource;
         }
 
@@ -64,14 +69,16 @@ namespace MyJournalTracker.EverNoteSupport
         /// </returns>
         public static string EnMediaTagWithResource(Resource resource, long width, long height)
         {
-            string sizeAtr = width > 0 && height > 0
+            var hashHex = BitConverter.ToString(resource.Data.BodyHash).Replace("-", string.Empty).ToLower();
+
+            var sizeAtr = width > 0 && height > 0
                                  ? string.Format("height=\"{0}\" width=\"{1}\" ", height, width)
                                  : string.Empty;
             return string.Format(
                 "<en-media type=\"{0}\" {1}hash=\"{2}\"/>", 
                 resource.Mime, 
                 sizeAtr, 
-                resource.Data.BodyHash);
+                hashHex);
         }
 
         /// <summary>
@@ -150,7 +157,7 @@ namespace MyJournalTracker.EverNoteSupport
         /// The note.
         /// </param>
         /// <returns>
-        /// The <see cref="NoteTags"/>.
+        /// The <see cref="EvernoteContentParser.NoteTags"/>.
         /// </returns>
         public static EvernoteContentParser.NoteTags SplitContentInTags(Note note)
         {

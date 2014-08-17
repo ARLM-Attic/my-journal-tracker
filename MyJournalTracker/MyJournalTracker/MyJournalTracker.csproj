@@ -119,9 +119,8 @@
     <Compile Include="SnippingTool\SnippingTool.Designer.cs">
       <DependentUpon>SnippingTool.cs</DependentUpon>
     </Compile>
-    <Compile Include="Storage\EverNoteContentCreator.cs" />
+    <Compile Include="EverNoteSupport\EverNoteContentCreator.cs" />
     <Compile Include="EverNoteSupport\EvernoteContentHelper.cs" />
-    <Compile Include="Storage\EvernoteSaver.cs" />
     <Compile Include="Utility\BitmapConverter.cs" />
     <Compile Include="Utility\Converter.cs" />
     <Compile Include="Utility\DropboxSupport.cs" />
@@ -243,7 +242,9 @@
     <EmbeddedResource Include="EverNoteSupport\Templates\paragraph.xml" />
     <EmbeddedResource Include="EverNoteSupport\Templates\timeDivider.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Storage\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

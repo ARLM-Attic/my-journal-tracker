@@ -39,6 +39,7 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,6 +50,7 @@
     <Reference Include="TechTalk.SpecFlow">
       <HintPath>..\packages\SpecFlow.1.9.0\lib\net35\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SpecFlow\Journal.feature.cs">
@@ -63,7 +65,9 @@
     <Compile Include="UnitTests\DropboxSupportTests.cs" />
     <Compile Include="UnitTests\EntryTests.cs" />
     <Compile Include="UnitTests\Evernote\EvernoteContentCreatorTests.cs" />
+    <Compile Include="UnitTests\Evernote\EvernoteContentHelperTests.cs" />
     <Compile Include="UnitTests\Evernote\UnitTestAccess.cs" />
+    <Compile Include="UnitTests\Helper\TestingHelper.cs" />
     <Compile Include="UnitTests\PathUtilityTests.cs" />
     <Compile Include="UnitTests\TimeHelperTests.cs" />
   </ItemGroup>
@@ -98,10 +102,27 @@
     <Content Include="Test Data\Screenshot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="UnitTests\Evernote\Test data\EmptyNote.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnitTests\Evernote\Test data\EvernoteFromWindowsClient.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnitTests\Evernote\Test data\EvernoteTestNote.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnitTests\Evernote\Test data\NoteWithUTF8.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnitTests\Evernote\Test data\TestImage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnitTests\Evernote\Test data\WonderWoman.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UnitTests\Dropbox\" />
-    <Folder Include="UnitTests\Helper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace MyJournalTracker.Storage
+namespace MyJournalTracker.EverNoteSupport
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,6 @@ namespace MyJournalTracker.Storage
     using Evernote.EDAM.NoteStore;
     using Evernote.EDAM.Type;
 
-    using MyJournalTracker.EverNoteSupport;
     using MyJournalTracker.Helper;
     using MyJournalTracker.Model;
 
@@ -173,7 +172,8 @@ namespace MyJournalTracker.Storage
                 return note;
             }
 
-            return new Note();
+            var newNote = new Note { NotebookGuid = notebookGuid };
+            return newNote;
         }
 
         /// <summary>

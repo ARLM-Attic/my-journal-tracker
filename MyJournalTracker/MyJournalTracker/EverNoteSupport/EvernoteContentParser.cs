@@ -58,7 +58,6 @@ namespace MyJournalTracker.EverNoteSupport
         /// </param>
         public EvernoteContentParser(string content)
         {
-            Debug.Assert(!string.IsNullOrEmpty(content), "ther must be a non empty string given to the EvernoteContentParser");
             this.evernoteContent = content;
         }
 
@@ -74,12 +73,17 @@ namespace MyJournalTracker.EverNoteSupport
         /// </returns>
         public NoteTags DoParsing()
         {
-            string xmlTag = this.SearchTag("<\\?xml.*?>");
-            string docTag = this.SearchTag("<\\!DOCTYPE.*?>");
-            string noteOpenTag = this.SearchTag("<en-note.*?>");
-            string noteCloseTag = this.SearchTag("</en-note.*?>");
+            if (string.IsNullOrEmpty(this.evernoteContent))
+            {
+                return new NoteTags();
+            }
 
-            string content =
+            var xmlTag = this.SearchTag("<\\?xml.*?>");
+            var docTag = this.SearchTag("<\\!DOCTYPE.*?>");
+            var noteOpenTag = this.SearchTag("<en-note.*?>");
+            var noteCloseTag = this.SearchTag("</en-note.*?>");
+
+            var content =
                 this.evernoteContent.Replace(xmlTag, string.Empty)
                     .Replace(docTag, string.Empty)
                     .Replace(noteOpenTag, string.Empty)
@@ -107,9 +111,9 @@ namespace MyJournalTracker.EverNoteSupport
         public string SearchTag(string pattern)
         {
             var regex = new Regex(pattern);
-            Match match = regex.Match(this.evernoteContent);
+            var match = regex.Match(this.evernoteContent);
             Debug.Assert(match.Success, "malformed evernote content. couldn't resolve tag: " + pattern);
-            return match.Groups[1].Value;
+            return match.Groups[0].Value;
         }
 
         #endregion

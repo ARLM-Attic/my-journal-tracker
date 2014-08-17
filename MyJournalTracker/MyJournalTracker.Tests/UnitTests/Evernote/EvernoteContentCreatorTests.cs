@@ -10,7 +10,6 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
 
     using MyJournalTracker.EverNoteSupport;
     using MyJournalTracker.Helper;
-    using MyJournalTracker.Storage;
 
     using NUnit.Framework;
 

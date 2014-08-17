@@ -9,11 +9,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace MyJournalTracker.Logic
 {
-    using System.Windows;
+    using System.Diagnostics;
 
+    using Microsoft.Win32;
+
+    using MyJournalTracker.EverNoteSupport;
     using MyJournalTracker.Model;
     using MyJournalTracker.Utility;
-
 
     /// <summary>
     /// The main window controller.
@@ -30,8 +32,34 @@ namespace MyJournalTracker.Logic
         /// </param>
         public void CreateNewEntry(Entry entry)
         {
-            var entrySaver = new DropboxSupport();
+            SaveEntryInEvernote(entry);
+            // SaveEntryInDropbox(entry);
+        }
 
+        /// <summary>
+        /// The save entry in evernote.
+        /// </summary>
+        /// <param name="entry">
+        /// The entry.
+        /// </param>
+        private static void SaveEntryInEvernote(Entry entry)
+        {
+            var token = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\AndreClaassen\MyJournalTracker", "developerKey", null);
+            Debug.Assert(!string.IsNullOrEmpty(token), "please register your developer token firstt");
+
+            var evernoteContentCreator = new EverNoteContentCreator(token);
+            evernoteContentCreator.SaveJournalEntryToEvernote(entry);
+        }
+
+        /// <summary>
+        /// The save entry in dropbox.
+        /// </summary>
+        /// <param name="entry">
+        /// The entry.
+        /// </param>
+        private static void SaveEntryInDropbox(Entry entry)
+        {
+            var entrySaver = new DropboxSupport();
             entrySaver.Save(entry, GetDefaultJournalPath(DropboxSupport.JournalPathItem.JournalPathEntries));
             if (entry.HasPicture)
             {
