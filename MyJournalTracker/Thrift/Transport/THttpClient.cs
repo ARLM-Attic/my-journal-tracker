@@ -201,8 +201,10 @@ namespace Thrift.Transport
 #endif
             }
 
-#if !SILVERLIGHT && !NETFX_CORE
-			connection.Proxy = null;
+#if !SILVERLIGHT && !NETFX_COR
+            // AC: 15.08.2014 - removed this line to fix the bugged proxy support from the evernote sdk
+            // see also https://github.com/evernote/evernote-sdk-csharp/issues/8
+			//connection.Proxy = null;
 #endif
 
             return connection;
