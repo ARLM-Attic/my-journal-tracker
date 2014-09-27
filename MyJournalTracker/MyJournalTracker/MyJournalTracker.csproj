@@ -33,7 +33,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>MyJournalTracker</ProductName>
     <PublisherName>My Journal Tracker</PublisherName>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
