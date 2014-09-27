@@ -11,6 +11,7 @@ namespace MyJournalTracker.EverNoteSupport
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Evernote.EDAM.NoteStore;
     using Evernote.EDAM.Type;
@@ -63,33 +64,54 @@ namespace MyJournalTracker.EverNoteSupport
         }
 
         /// <summary>
-        /// The read note book of the year.
+        /// The retrieve notebook names.
         /// </summary>
         /// <returns>
-        /// The <see cref="string"/>.
+        /// The <see cref="IEnumerable"/>.
         /// </returns>
-        public string RetrieveNoteBookGuidOfTheYear()
+        public IEnumerable<string> RetrieveNotebookNames()
         {
-            var currentYear = this.timeHelper.GetCurrentYear();
+            List<Notebook> listNotebooks = this.evernoteAccess.ListNotebooks();
+            return from n in listNotebooks select n.Name;
+        }
+
+        /// <summary>
+        /// The read note book of the year.
+        /// </summary>
+        /// <param name="notebookName">
+        /// The notebook Name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Tuple"/> withe the notebook guid and a <see cref="bool"/>.
+        /// the value true indicates, if the notebook is newly created.
+        /// </returns>
+        public Tuple<string, bool> RetrieveNoteBookGuidOf(string notebookName)
+        {
             var notebooks = this.evernoteAccess.ListNotebooks();
-            var notebook = notebooks.Find(nb => nb.Name == currentYear);
+            
+            if (string.IsNullOrEmpty(notebookName))
+            {
+                notebookName = this.timeHelper.GetCurrentYear();
+            }
+
+            var notebook = notebooks.Find(nb => nb.Name == notebookName);
 
             // notebook of the year found. return guid
             if (notebook != null)
             {
-                return notebook.Guid;
+                return new Tuple<string, bool>(notebook.Guid, false);
             }
 
             // No Notebook of the year found. Create it.
             notebook = new Notebook
                            {
                                Guid = Guid.NewGuid().ToString(),
-                               Name = currentYear,
+                               Name = notebookName,
                                ServiceCreated = TimeCapsule.GetCurrentTime().ToEvernoteTimeStamp()
                            };
 
             this.evernoteAccess.CreateNotebook(notebook);
-            return notebook.Guid;
+            return new Tuple<string, bool>(notebook.Guid, true);
         }
 
         /// <summary>
@@ -158,21 +180,26 @@ namespace MyJournalTracker.EverNoteSupport
         /// <returns>
         /// The <see cref="Note"/>.
         /// </returns>
-        public Note ReadNoteOfTheCurrentDay()
+        public Note ReadNoteOfTheCurrentDay(string notebookName)
         {
-            var notebookGuid = this.RetrieveNoteBookGuidOfTheYear();
-            var dateValue = "\"" + this.timeHelper.GetCurrentDateInLocaleFormat() + "\"";
-            var noteFilter = new NoteFilter { NotebookGuid = notebookGuid, Ascending = false, Words = dateValue };
+            var guidTuple = this.RetrieveNoteBookGuidOf(notebookName);
 
-            var notes = this.evernoteAccess.FindNotes(noteFilter, 0, 1);
-            if (notes.Notes.Count > 0)
+            // only search for notes, if the notebook wasn't newly created. sorry, for using a tuple.
+            if (!guidTuple.Item2)
             {
-                var note = notes.Notes[0];
-                note.Content = this.evernoteAccess.GetNoteContentWithGuid(note.Guid);
-                return note;
+                var dateValue = "\"" + this.timeHelper.GetCurrentDateInLocaleFormat() + "\"";
+                var noteFilter = new NoteFilter { NotebookGuid = guidTuple.Item1, Ascending = false, Words = dateValue };
+
+                var notes = this.evernoteAccess.FindNotes(noteFilter, 0, 1);
+                if (notes.Notes.Count > 0)
+                {
+                    var note = notes.Notes[0];
+                    note.Content = this.evernoteAccess.GetNoteContentWithGuid(note.Guid);
+                    return note;
+                }
             }
 
-            var newNote = new Note { NotebookGuid = notebookGuid };
+            var newNote = new Note { NotebookGuid = guidTuple.Item1 };
             return newNote;
         }
 
@@ -227,7 +254,7 @@ namespace MyJournalTracker.EverNoteSupport
         /// </param>
         public void SaveJournalEntryToEvernote(Entry entry)
         {
-            var note = this.ReadNoteOfTheCurrentDay();
+            var note = this.ReadNoteOfTheCurrentDay(entry.EntryNotebookName);
             note = this.AppendJournalEntry(note, entry);
             this.SaveNote(note);
         }

@@ -102,6 +102,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\FilteredComboBox.cs" />
     <Compile Include="EverNoteSupport\AbstractEvernoteAccess.cs" />
     <Compile Include="EverNoteSupport\EvernoteAccess.cs" />
     <Compile Include="EverNoteSupport\EvernoteAccessException.cs" />
@@ -229,11 +230,11 @@
     <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Evernote\EDAM.csproj">
+    <ProjectReference Include="..\..\..\..\GitHub\evernote-sdk-csharp\src\Evernote\EDAM.csproj">
       <Project>{7E5E1654-DAD4-4E03-82FC-8CA33DB1EBE5}</Project>
       <Name>EDAM</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Thrift\Thrift.csproj">
+    <ProjectReference Include="..\..\..\..\GitHub\evernote-sdk-csharp\src\Thrift\Thrift.csproj">
       <Project>{499EB63C-D74C-47E8-AE48-A2FC94538E9D}</Project>
       <Name>Thrift</Name>
     </ProjectReference>

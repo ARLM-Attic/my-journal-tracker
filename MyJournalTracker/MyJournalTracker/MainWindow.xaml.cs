@@ -10,7 +10,9 @@
 namespace MyJournalTracker
 {
     using System;
+    using System.Collections.Generic;
     using System.Windows;
+    using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
 
@@ -41,6 +43,7 @@ namespace MyJournalTracker
         /// </summary>
         public MainWindow()
         {
+            Entry.NotebookList = this.controller.RetrieveNotebookNames();
             this.InitializeComponent();
             this.TextBox.Focus();
             this.TextBox.SelectAll();
@@ -92,8 +95,34 @@ namespace MyJournalTracker
         /// </summary>
         private void ExecuteSaveEntry()
         {
-            this.controller.CreateNewEntry((Entry)this.DataContext);
-            this.DataContext = new Entry();
+            if (!string.IsNullOrEmpty(this.notebookComboBox.Text)
+                && string.IsNullOrEmpty(this.EditedEntry.EntryNotebookName))
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show(
+                    "Do you want to create a new notebook with the title \"" + this.notebookComboBox.Text + "\"",
+                    "Warning!",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+                if (messageBoxResult == MessageBoxResult.No)
+                {
+                    this.notebookComboBox.Text = string.Empty;
+                    return;
+                }
+
+                this.EditedEntry.EntryNotebookName = this.notebookComboBox.Text;
+            }
+
+            try
+            {
+                this.controller.CreateNewEntry((Entry)this.DataContext);
+                
+                // create new entry but save the old notebook name
+                this.DataContext = new Entry { EntryNotebookName = this.EditedEntry.EntryNotebookName };
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error while saving", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>

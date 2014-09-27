@@ -20,7 +20,7 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
     public class EvernoteContentCreatorTests
     {
         /// <summary>
-        /// The the function <see cref="EverNoteContentCreator.RetrieveNoteBookGuidOfTheYear"/>
+        /// The the function <see cref="EverNoteContentCreator.RetrieveNoteBookGuidOf"/>
         /// </summary>
         [Test]
         public void TestReadNotebookOfTheYear()
@@ -30,11 +30,33 @@ namespace MyJournalTracker.Tests.UnitTests.Evernote
             var contentCreator = new EverNoteContentCreator(testAccess);
             Assert.AreEqual(0, testAccess.ListNotebooks().Count, "First: The list of notebooks must be empty");
             
-            var notebookGuid = contentCreator.RetrieveNoteBookGuidOfTheYear();
+            var tuple = contentCreator.RetrieveNoteBookGuidOf(null);
+
+            // The tuple should indicate true, because the notebook is newly created
+            Assert.IsTrue(tuple.Item2);
+
+            // After I have retrieved a notebook of the year, a notebook must be created
+            var notebook = testAccess.ListNotebooks().Find(n => n.Guid == tuple.Item1);
+            Assert.AreEqual("2013", notebook.Name);
+        }
+
+
+        /// <summary>
+        /// The the function <see cref="EverNoteContentCreator.RetrieveNoteBookGuidOf"/>
+        /// </summary>
+        [Test]
+        public void TestReadNotebookWithGivenName()
+        {
+            TimeCapsule.TestableTime = new DateTime(2013, 11, 20);
+            var testAccess = new UnitTestAccess();
+            var contentCreator = new EverNoteContentCreator(testAccess);
+            Assert.AreEqual(0, testAccess.ListNotebooks().Count, "First: The list of notebooks must be empty");
+
+            var notebookGuid = contentCreator.RetrieveNoteBookGuidOf("Tralala");
 
             // After I have retrieved a notebook of the year, a notebook must be created
             var notebook = testAccess.ListNotebooks().Find(n => n.Guid == notebookGuid);
-            Assert.AreEqual("2013", notebook.Name);
+            Assert.AreEqual("Tralala", notebook.Name);
         }
 
         /// <summary>

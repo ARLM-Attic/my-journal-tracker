@@ -23,11 +23,38 @@ namespace MyJournalTracker.Model
     {
         #region Fields
 
+        private static List<string> notebookNamesList = null;
         /// <summary>
         ///     The unknown key values
         /// </summary>
         private readonly Dictionary<string, KeyValuePair<string, string>> unknownKeyValues =
             new Dictionary<string, KeyValuePair<string, string>>();
+
+        /// <summary>
+        ///     The evernote Notebook, where this entry is stored.
+        ///     a blank entry indicates the notebook with the current year
+        /// </summary>
+        private string entryNotebookName;
+
+
+        static public IEnumerable<string> NotebookList
+        {
+            set
+            {
+                notebookNamesList = new List<string>(value);
+            }
+
+            get
+            {
+                if (notebookNamesList == null)
+                {
+                    return new List<string> { "2013", "2014", "2015" };
+                }
+
+                return notebookNamesList;
+            }
+        }
+
 
         /// <summary>
         ///     The bitmap image for the associated EntryPicture of the journal entry
@@ -177,6 +204,35 @@ namespace MyJournalTracker.Model
                 this.entryPicture = value;
                 this.IsDirty = true;
                 this.OnPropertyChanged("EntryPicture");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the entry text.
+        /// </summary>
+        /// <remarks>
+        ///     The dirty tag will be set, if the new text is different
+        /// </remarks>
+        /// <value>
+        ///     The entry text.
+        /// </value>
+        public string EntryNotebookName
+        {
+            get
+            {
+                return this.entryNotebookName;
+            }
+
+            set
+            {
+                if (this.entryNotebookName == value)
+                {
+                    return;
+                }
+
+                this.entryNotebookName = value;
+                this.IsDirty = true;
+                this.OnPropertyChanged("EntryNoteBookname");
             }
         }
 

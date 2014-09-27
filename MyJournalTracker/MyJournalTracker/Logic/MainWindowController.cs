@@ -9,6 +9,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace MyJournalTracker.Logic
 {
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     using Microsoft.Win32;
@@ -31,6 +32,29 @@ namespace MyJournalTracker.Logic
         /// </summary>
         public MainWindowController()
         {
+        }
+
+        /// <summary>
+        /// The evernote content creator.
+        /// </summary>
+        public EverNoteContentCreator EvernoteContentCreator
+        {
+            get
+            {
+                if (this.evernoteContentCreator == null)
+                {
+                    var token = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\AndreClaassen\MyJournalTracker", "developerKey", null);
+                    Debug.Assert(!string.IsNullOrEmpty(token), "please register your developer token firstt");
+                    this.evernoteContentCreator = new EverNoteContentCreator(token);
+                }
+
+                return this.evernoteContentCreator;
+            }
+        }
+
+        public IEnumerable<string> RetrieveNotebookNames()
+        {
+            return this.EvernoteContentCreator.RetrieveNotebookNames();
         }
 
         /// <summary>
@@ -73,14 +97,7 @@ namespace MyJournalTracker.Logic
         /// </param>
         private void SaveEntryInEvernote(Entry entry)
         {
-            if (this.evernoteContentCreator == null)
-            {
-                var token = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\AndreClaassen\MyJournalTracker", "developerKey", null);
-                Debug.Assert(!string.IsNullOrEmpty(token), "please register your developer token firstt");
-                this.evernoteContentCreator = new EverNoteContentCreator(token);
-            }
-
-            this.evernoteContentCreator.SaveJournalEntryToEvernote(entry);
+            this.EvernoteContentCreator.SaveJournalEntryToEvernote(entry);
         }
 
         /////// <summary>
